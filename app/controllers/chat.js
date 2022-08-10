@@ -10,5 +10,9 @@ module.exports.iniciaChat = function(app, req, res) {
         res.render("index", {validacao: erros});
     }
 
+    //Recuperando uma variável global
+    const websocket = app.get('websocket');
+    websocket.emit('canal', {apelido: dados.apelido, mensagem: `${dados.apelido} acabou de entrar.`});
+
     res.render('chat');
 };
