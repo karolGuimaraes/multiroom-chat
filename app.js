@@ -17,4 +17,8 @@ websocket.on('connection', function(socket){
     socket.on('disconnect', function(){
         console.log("Websocket OFF");
     });
+
+    socket.on('mensagem', function(data){
+        websocket.emit('canal', {apelido: data.apelido, mensagem: data.mensagem});
+    });
 });

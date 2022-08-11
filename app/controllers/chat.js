@@ -14,5 +14,5 @@ module.exports.iniciaChat = function(app, req, res) {
     const websocket = app.get('websocket');
     websocket.emit('canal', {apelido: dados.apelido, mensagem: `${dados.apelido} acabou de entrar.`});
 
-    res.render('chat');
+    res.render('chat', {usuario: dados});
 };

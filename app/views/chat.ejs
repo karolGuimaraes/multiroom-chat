@@ -108,16 +108,15 @@
 		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
 			<div class="container">
 				<div class="panel-body campo-mensagem">
-					<form>
-						<div class="col-md-12">
-							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Mensagem">
-								<span class="input-group-btn">
-									<button class="btn btn-default" type="button">></button>
-								</span>
-							</div>
+					<div class="col-md-12">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Mensagem" id="mensagem">
+							<input type="hidden" value="<%=usuario.apelido%>" id="apelido">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" id="enviar">></button>
+							</span>
 						</div>
-					</form>
+					</div>
 				</div>
 			</div>
 		</nav>		
@@ -134,6 +133,23 @@
 				html += `<div class="dialogo"><h4>${data.apelido}</h4><p>${data.mensagem}</p></div>`;
 				$('#dialogos').append(html);
 			});
+
+			$('#enviar').click(function(){
+				const mensagem = $('#mensagem').val();
+				const apelido = $('#apelido').val();
+				socket.emit('mensagem', {apelido: null, mensagem: mensagem});
+				$('#mensagem').val('');
+			});
+
+			$('#mensagem').keypress(function (e) {
+				if (e.which == 13) {
+					const mensagem = $('#mensagem').val();
+					const apelido = $('#apelido').val();
+					socket.emit('mensagem', {apelido: apelido, mensagem: mensagem});
+					$('#mensagem').val('');
+				}
+			});
+			
 		</script>
 	</body>
 </html>
