@@ -20,5 +20,11 @@ websocket.on('connection', function(socket){
 
     socket.on('mensagem', function(data){
         websocket.emit('canal', {apelido: data.apelido, mensagem: data.mensagem});
+
+        if(parseInt(data.onlines) == 0) {
+            websocket.emit('online', {apelido: data.apelido});
+        }
+        
+
     });
 });

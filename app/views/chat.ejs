@@ -84,21 +84,12 @@
 			
 			<div class="row participantes" id="participantes" style="display:none">
 				<div class="col-md-1"></div>
-				<div class="col-md-10">
-					<span class="participante">
+				<div class="col-md-10" id="pessoas">
+					<!-- <span class="participante" >
 						<img src="images/ico_usuario.png" />
 						Jorge
-					</span>
-					
-					<span class="participante">
-						<img src="images/ico_usuario.png" />
-						José
-					</span>
-					
-					<span class="participante">
-						<img src="images/ico_usuario.png" />
-						Fernando
-					</span>
+					</span> -->
+		
 				</div>
 				<div class="col-md-1"></div>
                 
@@ -112,6 +103,7 @@
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Mensagem" id="mensagem">
 							<input type="hidden" value="<%=usuario.apelido%>" id="apelido">
+							<input type="hidden" value="0" id="onlines">
 							<span class="input-group-btn">
 								<button class="btn btn-default" type="button" id="enviar">></button>
 							</span>
@@ -128,28 +120,40 @@
 		<script>
 			const socket = io('http://localhost:3000');
 
+			function send() {
+				const mensagem = $('#mensagem').val();
+				const apelido = $('#apelido').val();
+				const onlines = $('#onlines').val();
+				socket.emit('mensagem', {apelido: apelido, mensagem: mensagem, onlines:onlines});
+				$('#mensagem').val('');
+				$('#onlines').val(1);
+				window.scrollTo(0, document.body.scrollHeight);
+			}
+
 			socket.on('canal', function(data){
 				var html = '';
 				html += `<div class="dialogo"><h4>${data.apelido}</h4><p>${data.mensagem}</p></div>`;
 				$('#dialogos').append(html);
+				window.scrollTo(0, document.body.scrollHeight);
 			});
 
 			$('#enviar').click(function(){
-				const mensagem = $('#mensagem').val();
-				const apelido = $('#apelido').val();
-				socket.emit('mensagem', {apelido: null, mensagem: mensagem});
-				$('#mensagem').val('');
+				send();
 			});
 
 			$('#mensagem').keypress(function (e) {
 				if (e.which == 13) {
-					const mensagem = $('#mensagem').val();
-					const apelido = $('#apelido').val();
-					socket.emit('mensagem', {apelido: apelido, mensagem: mensagem});
-					$('#mensagem').val('');
+					send();
 				}
 			});
+
 			
+			socket.on('online', function(data){
+				var html = '';
+				html += `<span class="participante"><img src="images/ico_usuario.png"/>${data.apelido}</span>`;
+				$('#pessoas').append(html);
+			});
+
 		</script>
 	</body>
 </html>
